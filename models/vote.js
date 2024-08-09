@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../database.js';
-import Candidate from './candidate.js';
-import User from './user.js';
+import Candidate from './Candidates.js';
+// import User from './user.js';
 
 const Vote = sequelize.define('Vote', {
   vote_id: {
@@ -14,16 +14,12 @@ const Vote = sequelize.define('Vote', {
     allowNull: false,
     references: {
       model: Candidate,
-      key: 'candidate_id'
+      key: 'can_id'
     }
   },
   user_id: {
     type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: User,
-      key: 'user_id'
-    }
+    allowNull: false
   },
   state: {
     type: DataTypes.BOOLEAN,
@@ -33,9 +29,9 @@ const Vote = sequelize.define('Vote', {
     type: DataTypes.BOOLEAN,
     defaultValue: true
   }
+}, {
+  freezeTableName: true,
+  timestamps: false  // createdAt 및 updatedAt 필드 자동 생성 안함
 });
-
-Vote.belongsTo(Candidate, { foreignKey: 'candidate_id' });
-Vote.belongsTo(User, { foreignKey: 'user_id' });
 
 export default Vote;

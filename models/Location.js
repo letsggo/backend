@@ -6,18 +6,13 @@ import MPLM from './MyPlaceListMapping.js';
 const Location = sequelize.define('Location', {
   location_id: {
     type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
+        primaryKey: true
   },
   travel_id: {
     type: DataTypes.INTEGER,
-    allowNull: false
   },
   user_id: {
     type: DataTypes.INTEGER,
-    references: {
-      allowNull: false
-    }
   },
   location_name: {
     type: DataTypes.STRING,
@@ -30,10 +25,13 @@ const Location = sequelize.define('Location', {
     references: {
         autoIncrement: true,
     }
-  }
-});
+} 
+}
+, {
+  freezeTableName: true,// 테이블 이름을 고정
+  timestamps: false
+}
+);
 
-Candidate.belongsTo(MPLM, { foreignKey: 'list_id' });
-Candidate.belongsTo(MPLM, { foreignKey: 'user_id' });
 
 export default Location;

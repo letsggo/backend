@@ -1,18 +1,16 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../database.js';
-import MPLM from './MyPlaceListMapping.js';
 import Location from './Location.js';
-
 
 const Candidate = sequelize.define('Candidate', {
   can_id: {
     type: DataTypes.INTEGER,
-    autoIncrement: true,
+    // autoIncrement: true,
     primaryKey: true
   },
   can_name: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false // can_name은 필수 필드로 설정
   },
   location_id: {
     type: DataTypes.INTEGER,
@@ -24,29 +22,26 @@ const Candidate = sequelize.define('Candidate', {
   travel_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: Travel,
+      model: 'Travel', // 임시로 문자열로 지정. 실제 모델에서 수정 필요.
       key: 'id'
     }
   },
   user_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: User,
+      model: 'User', // 임시로 문자열로 지정. 실제 모델에서 수정 필요.
       key: 'id'
     }
   },
   list_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: List,
+      model: 'List', // 임시로 문자열로 지정. 실제 모델에서 수정 필요.
       key: 'id'
     }
   }
+}, {
+  timestamps: false // createdAt 및 updatedAt 필드 자동 생성 안함
 });
-
-Candidate.belongsTo(MPLM, { foreignKey: 'list_id' });
-Candidate.belongsTo(MPLM, { foreignKey: 'user_id' });
-Candidate.belongsTo(Location, { foreignKey: 'travel_id' });
-Candidate.belongsTo(Location, { foreignKey: 'user_id' });
 
 export default Candidate;

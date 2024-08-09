@@ -1,12 +1,9 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../database.js';
-import Candidate from "./Candidates.js";
-
 
 const MyPlaceListMapping = sequelize.define('MyPlaceListMapping', {
   list_id: {
     type: DataTypes.INTEGER,
-    autoIncrement: true,
   },
   user_id: {
     type: DataTypes.INTEGER,
@@ -14,25 +11,17 @@ const MyPlaceListMapping = sequelize.define('MyPlaceListMapping', {
   },
   mapping_id: {
     type: DataTypes.INTEGER,
-    references: {
-        autoIncrement: true,
-    }
+    autoIncrement: true,
+    primaryKey: true
   },
   place_name: {
     type: DataTypes.STRING,
-    references: {
-        allowNull: false
-    }
+    allowNull: false
   },
-  adress: {
+  address: {
     type: DataTypes.STRING,
-    references: {
-        allowNull: false
-    }
+    allowNull: false
   }
 });
-
-MyPlaceListMapping.belongsTo(Candidate, { foreignKey: 'list_id' });
-MyPlaceListMapping.belongsTo(Candidate, { foreignKey: 'user_id' });
 
 export default MyPlaceListMapping;

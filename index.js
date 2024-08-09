@@ -1,15 +1,22 @@
-const express = require('express');
+import express from 'express';
+import path from 'path';
+import morgan from 'morgan';
+import { fileURLToPath } from 'url';
+import sequelize from './database.js';
+import voteRouter from './routes/vote.js';
+import candidateRouter from './routes/CreateCan.js';
+import './models/associations.js'; // 관계 설정을 임포트
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
-const path = require('path');
-const morgan = require('morgan');
-const {sequelize} = require('./models'); // db.sequelize 객체
 
-app.set('port', process.env.PORT||3001);
+app.set('port', process.env.PORT || 3001);
 
-sequelize.sync({force : false}) // 서버 실행시 MySQL 과 연동되도록 하는 sync 메서드 
-// force : true 로 해놓으면 서버 재시작마다 테이블이 재생성됨. 테이블을 잘못 만든 경우에 true 로 설정
+sequelize.sync({ force: true })
 .then(() => {
-    console.log('데이터 베이스 연결 성공');
+    console.log('데이터베이스 연결 성공');
 })
 .catch((err) => {
     console.log(err);
@@ -18,21 +25,27 @@ sequelize.sync({force : false}) // 서버 실행시 MySQL 과 연동되도록 �
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, "index.html")));
 app.use(express.json());
-app.use(express.urlencoded({extended : false}));
+app.use(express.urlencoded({ extended: false }));
 
-app.use((req, res, next) =>{
+app.use("/vote", voteRouter);
+app.use("/candidate", candidateRouter); // 후보 생성 라우트 사용
+
+    // 404 에러 처리
+app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
     error.status = 404;
     next(error);
 });
 
-app.use((err,req ,res, next) => {
-    res.locals.message = err.message;
-    res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
+// 에러 처리 미들웨어
+app.use((err, req, res, next) => {
     res.status(err.status || 500);
-    res.render('error');
+    res.json({
+        message: err.message,
+        error: process.env.NODE_ENV !== 'production' ? err : {}
+    });
 });
 
 app.listen(app.get('port'), () => {
-    console.log(app.get('port'), '번 포트에서 대기중');
-})
+    console.log(app.get('port'), '번 포트에서 대기 중');
+});
