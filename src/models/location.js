@@ -1,60 +1,39 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../../database.js';
-import User from './user.js';
-import TravelPlan from './travelPlan.js';
+import MPLM from './MyPlaceListMapping.js';
+
 
 const Location = sequelize.define('Location', {
   location_id: {
     type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
+    primaryKey: true
   },
   travel_id: {
     type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: TravelPlan,
-      key: 'travel_id'
-    }
+    allowNull: false
   },
   user_id: {
     type: DataTypes.INTEGER,
-    allowNull: false,
     references: {
-      model: User,
-      key: 'user_id'
+      allowNull: false
     }
   },
   location_name: {
     type: DataTypes.STRING,
-    allowNull: false
   },
-  location_address: {
+  location_adress: {
     type: DataTypes.STRING,
-    allowNull: false
   },
-  location_img: {
-    type: DataTypes.TEXT,
-    allowNull: true
+  list_id: {
+    type: DataTypes.INTEGER,
+    references: {
+        autoIncrement: true,
+    }
   }
-}, {
-  tableName: 'Location',
-  timestamps: false
 });
 
-// 모델 간의 관계를 설정합니다.
-TravelPlan.hasMany(Location, {
-  foreignKey: 'travel_id'
-});
-Location.belongsTo(TravelPlan, {
-  foreignKey: 'travel_id'
-});
-
-User.hasMany(Location, {
-  foreignKey: 'user_id'
-});
-Location.belongsTo(User, {
-  foreignKey: 'user_id'
-});
+Candidate.belongsTo(MPLM, { foreignKey: 'list_id' });
+Candidate.belongsTo(MPLM, { foreignKey: 'user_id' });
 
 export default Location;
