@@ -3,6 +3,7 @@ import sequelize from '../../database.js';
 import Location from './Location.js';
 import FavoritList from './FavoriteList.js';
 
+
 const Voted = sequelize.define('Voted', {
     vote_id: {
         type: DataTypes.INTEGER,
@@ -21,6 +22,10 @@ const Voted = sequelize.define('Voted', {
     },
     allowNull: true
   },
+  can_name: {
+    type: DataTypes.STRING,
+    allowNull: false // 후보지 이름은 반드시 존재해야 하므로 not null로 설정
+  },
   travel_id: {
     type: DataTypes.INTEGER,
     allowNull: false
@@ -37,6 +42,14 @@ const Voted = sequelize.define('Voted', {
     },
     allowNull: true
   },
+  place_name: {  // 새로 추가된 필드
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  place_address: {  // 새로 추가된 필드
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   ranked: {
     type: DataTypes.INTEGER,
   }
@@ -45,7 +58,7 @@ const Voted = sequelize.define('Voted', {
     timestamps: false
   });
 
-// 모델 관계 설정
+
 Voted.belongsTo(Location, { foreignKey: 'location_id' });
 Voted.belongsTo(FavoritList, { foreignKey: 'favorit_id' });
 
