@@ -120,7 +120,7 @@ class MakeRoomController {
       try {
         const myRooms = await MakeRoom.findAll({
           where: { user_id: req.user.user_id },
-          attributes: ['title', 'region', 'start_date', 'end_date'] // 필요한 필드만 반환
+          attributes: ['title', 'region', 'start_date', 'end_date', 'travel_image'] 
         });
         res.status(200).json(myRooms);
       } catch (error) {
