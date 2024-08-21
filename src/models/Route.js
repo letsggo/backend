@@ -17,11 +17,19 @@ const Route = sequelize.define('Route', {
       key: 'travel_id'
     }
   },
+  route_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: TravelRoute,
+      key: 'route_id'
+    }
+  },
   start_location: {
     type: DataTypes.STRING,
     allowNull: false,
     references: {
-      model: TravelPlan,
+      model: TravelRoute,
       key: 'place_name'
     }
   },
@@ -29,7 +37,7 @@ const Route = sequelize.define('Route', {
     type: DataTypes.STRING,
     allowNull: false,
     references: {
-      model: TravelPlan,
+      model: TravelRoute,
       key: 'place_name'
     }
   },
@@ -47,10 +55,13 @@ const Route = sequelize.define('Route', {
 TravelPlan.hasMany(Route, { foreignKey: 'travel_id' });
 Route.belongsTo(TravelPlan, { foreignKey: 'travel_id' });
 
+TravelPlan.hasMany(Route, { foreignKey: 'route_id' });
+Route.belongsTo(TravelRoute, { foreignKey: 'route_id' });
+
 TravelPlan.hasMany(Route, { foreignKey: 'start_location' });
-Route.belongsTo(TravelPlan, { foreignKey: 'place_name' });
+Route.belongsTo(TravelRoute, { foreignKey: 'place_name' });
 
 TravelPlan.hasMany(Route, { foreignKey: 'end_location' });
-Route.belongsTo(TravelPlan, { foreignKey: 'place_name' });
+Route.belongsTo(TravelRoute, { foreignKey: 'place_name' });
 
 export default Route;
