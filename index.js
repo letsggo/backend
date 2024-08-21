@@ -121,6 +121,7 @@ app.use('/travel-plans', accommodationRoutes);
 app.use('/', inviteRoutes);
 app.use("/travel-plans", voteRouter);
 app.use("/travel-plans", CandidateRoutes);
+app.use("/travel", addRoute);
 
 // 라우터가 없는 경우에 대한 처리
 app.use((req, res, next) => {
