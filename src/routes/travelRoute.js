@@ -14,29 +14,35 @@ const router = express.Router();
 // route 테이블 생성하는 API
 router.get('/:travel_id/routes', async (req, res) => {
   const { travel_id } = req.params;
-  const { location_id, acc_id } = req.body; // location_id와 acc_id를 사용해서 데이터를 찾습니다.
 
   // route 테이블 생성
   try {
-    // TravelRoute에서 start_location과 end_location에 해당하는 데이터를 가져옴
-    const startLocation = await Location.findByPk(location_id);
-    const endLocation = await Accommodations.findByPk(acc_id);
+    // TravelRoute에서 route_title과 route_id 찾기
+    const routeTitle = await TravelRoute.findByPk(route_title);
+    const startLocation = await TravelRoute.findByPk(route_id);
 
-    if (!startLocation || !endLocation) {
-      return res.status(404).json({ message: '해당하는 Location 또는 Accommodation을 찾을 수 없습니다.' });
+    if (!routeTitle) {
+      return res.status(404).json({ message: 'routeTitle를 찾지 수 없습니다.' });
+    } else if (!routeTitle && !startLocation) {
+        return res.status(404).json({ message: 'routeTitle에 있는 startLocation을 찾을 수 없습니다.' });
+    }
+
+    const endLocation = await TravelRoute.findByPk(route_id + 1);
+
+    if (!routeTitle && !endLocation) {
+        return res.status(404).json({ message: 'routeTitle에 있는 endLocation 찾을 수 없습니다.' });
     }
 
     // 길찾기 URL 생성
-    const search_url = generateNaverSearchUrl(startLocation.location_name, endLocation.acc_name);
+    const search_url = generateNaverSearchUrl(startLocation.place_name, endLocation.place_name);
 
     // 새로운 Route 데이터를 생성
     const newRoute = await Route.create({
       travel_id,
-      start_location: startLocation.location_name,
-      end_location: endLocation.acc_name,
+      start_location: startLocation.place_name,
+      end_location: endLocation.place_name,
       search_url
     });
-
 
     res.status(201).json({
       message: 'Route 테이블이 성공적으로 생성되었습니다.',
