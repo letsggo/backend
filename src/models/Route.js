@@ -10,15 +10,17 @@ const Route = sequelize.define('Route', {
     references: {
       model: TravelPlan,
       key: 'travel_id'
-    }
+    },
+    onDelete: 'CASCADE',
   },
   route_title: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false,
     references: {
       model: TravelRoute,
       key: 'route_title'
-    }
+    },
+    onDelete: 'CASCADE',
   },
   start_location: {
     type: DataTypes.STRING,
@@ -26,19 +28,21 @@ const Route = sequelize.define('Route', {
     references: {
       model: TravelRoute,
       key: 'place_name'
-    }
+    },
+    onDelete: 'CASCADE',
   },
   end_location: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     references: {
       model: TravelRoute,
       key: 'place_name'
-    }
+    },
+    onDelete: 'CASCADE',
   },
   search_url: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: DataTypes.TEXT,
+    allowNull: true
   }
 }, {
   tableName: 'Route',
@@ -50,13 +54,13 @@ const Route = sequelize.define('Route', {
 TravelPlan.hasMany(Route, { foreignKey: 'travel_id' });
 Route.belongsTo(TravelPlan, { foreignKey: 'travel_id' });
 
-TravelPlan.hasMany(Route, { foreignKey: 'route_title' });
-Route.belongsTo(TravelRoute, { foreignKey: 'route_title' });
+TravelRoute.hasMany(Route, { foreignKey: 'route_title', sourceKey: 'route_title' });
+Route.belongsTo(TravelRoute, { foreignKey: 'route_title', targetKey: 'route_title' });
 
-TravelPlan.hasMany(Route, { foreignKey: 'start_location' });
-Route.belongsTo(TravelRoute, { foreignKey: 'place_name' });
+TravelRoute.hasMany(Route, { foreignKey: 'start_location', sourceKey: 'place_name' });
+Route.belongsTo(TravelRoute, { foreignKey: 'start_location', targetKey: 'place_name' });
 
-TravelPlan.hasMany(Route, { foreignKey: 'end_location' });
-Route.belongsTo(TravelRoute, { foreignKey: 'place_name' });
+TravelRoute.hasMany(Route, { foreignKey: 'end_location', sourceKey: 'place_name' });
+Route.belongsTo(TravelRoute, { foreignKey: 'end_location', targetKey: 'place_name' });
 
 export default Route;

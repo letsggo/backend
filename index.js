@@ -20,6 +20,7 @@ import accommodationRoutes from './src/routes/accommodationRoutes.js';
 import inviteRoutes from './src/routes/inviteRoutes.js';
 import voteRouter from "./src/routes/vote.js";
 import addRoute from "./src/routes/addRoute.js";
+import travelRoute from './src/routes/travelRoute.js';
 
 // 모델 파일들
 import './src/models/user.js';
@@ -31,6 +32,7 @@ import './src/models/myPlaceList.js';
 import './src/models/MyPlaceListMapping.js';
 import './src/models/accommodation.js';
 import './src/models/travelRoute.js';
+import './src/models/Route.js';
 import './src/models/user_travelPlan.js';
 import './src/models/vote.js';
 import './src/models/voted.js';
