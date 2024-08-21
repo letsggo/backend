@@ -1,5 +1,6 @@
 import express from 'express';
 import TravelRoute from '../models/travelRoute.js';
+import Route from '../models/Route.js';
 
 // URL 생성 API
 const generateNaverSearchUrl = (startTitle, endTitle) => {
@@ -17,6 +18,8 @@ router.get('/:travel_id/routes', async (req, res) => {
 
   // route 테이블 생성
   try {
+    const Route = [];
+
     // TravelRoute에서 route_title과 route_id 찾기
     const routeTitle = await TravelRoute.findByPk(route_title);
     const startLocation = await TravelRoute.findByPk(route_id);
@@ -36,12 +39,12 @@ router.get('/:travel_id/routes', async (req, res) => {
     // 길찾기 URL 생성
     const search_url = generateNaverSearchUrl(startLocation.place_name, endLocation.place_name);
 
-    // 새로운 Route 데이터를 생성
-    const newRoute = await Route.create({
-      travel_id,
-      start_location: startLocation.place_name,
-      end_location: endLocation.place_name,
-      search_url
+    // Route 테이블에 추가
+    travelRoutes.push({
+        travel_id,
+        start_location: startLocation.place_name,
+        end_location: endLocation.place_name,
+        search_url
     });
 
     res.status(201).json({
@@ -56,7 +59,7 @@ router.get('/:travel_id/routes', async (req, res) => {
 
 // 길찾기 URL 조회 API
 router.get('/:travel_id/routes/:route_id', async (req, res) => {
-    const { travel_id, start_location, end_location } = req.body;
+    const { travel_id, route_id } = req.body;
   
     try {
       // Route 테이블에서 start_location과 end_location이 일치하는 데이터 조회

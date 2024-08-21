@@ -4,11 +4,6 @@ import TravelPlan from './travelPlan.js';
 import TravelRoute from './travelRoute.js';
 
 const Route = sequelize.define('Route', {
-  order_id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-  },
   travel_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -17,12 +12,12 @@ const Route = sequelize.define('Route', {
       key: 'travel_id'
     }
   },
-  route_id: {
+  route_title: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
       model: TravelRoute,
-      key: 'route_id'
+      key: 'route_title'
     }
   },
   start_location: {
@@ -55,8 +50,8 @@ const Route = sequelize.define('Route', {
 TravelPlan.hasMany(Route, { foreignKey: 'travel_id' });
 Route.belongsTo(TravelPlan, { foreignKey: 'travel_id' });
 
-TravelPlan.hasMany(Route, { foreignKey: 'route_id' });
-Route.belongsTo(TravelRoute, { foreignKey: 'route_id' });
+TravelPlan.hasMany(Route, { foreignKey: 'route_title' });
+Route.belongsTo(TravelRoute, { foreignKey: 'route_title' });
 
 TravelPlan.hasMany(Route, { foreignKey: 'start_location' });
 Route.belongsTo(TravelRoute, { foreignKey: 'place_name' });
