@@ -56,14 +56,15 @@ router.get('/:travel_id/routes', async (req, res) => {
 
 // 길찾기 URL 조회 API
 router.get('/:travel_id/routes/:route_id', async (req, res) => {
-    const { start_location, end_location } = req.body;
+    const { travel_id, start_location, end_location } = req.body;
   
     try {
       // Route 테이블에서 start_location과 end_location이 일치하는 데이터 조회
       const route = await Route.findOne({
         where: {
-          start_location,
-          end_location
+            travel_id,
+            start_location,
+            end_location
         }
       });
   

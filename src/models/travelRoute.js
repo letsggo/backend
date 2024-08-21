@@ -8,7 +8,7 @@ const TravelRoute = sequelize.define('TravelRoute', {
   route_id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true,
+    primaryKey: true
   },
   travel_id: {
     type: DataTypes.INTEGER,
