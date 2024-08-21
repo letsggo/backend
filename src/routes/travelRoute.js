@@ -12,62 +12,66 @@ const generateNaverSearchUrl = (startTitle, endTitle) => {
 
 const router = express.Router();
 
-// route 테이블 생성하는 API
-router.get('/:travel_id/routes', async (req, res) => {
-  const { travel_id } = req.params;
+// route url 저장하는 API
+router.post('/:travel_id/routes', async (req, res) => {
+  const { travel_id, route_title, route_order } = req.params;
 
   // route 테이블 생성
   try {
     const Route = [];
 
-    // TravelRoute에서 route_title과 route_id 찾기
-    const routeTitle = await TravelRoute.findByPk(route_title);
-    const startLocation = await TravelRoute.findByPk(route_id);
+    // TravelRoute에서 route_order로 출발 장소 가져오기
+    const Location = await TravelRoute.findOne({
+      where: {
+          travel_id,
+          route_title,
+          route_order
+      }
+    });
 
-    if (!routeTitle) {
-      return res.status(404).json({ message: 'routeTitle를 찾지 수 없습니다.' });
-    } else if (!routeTitle && !startLocation) {
-        return res.status(404).json({ message: 'routeTitle에 있는 startLocation을 찾을 수 없습니다.' });
+    if (!Location) {
+        return res.status(404).json({ message: '해당 travel_id의 route_title에 있는 Location을 찾을 수 없습니다.' });
     }
 
-    const endLocation = await TravelRoute.findByPk(route_id + 1);
+    const start = await TravelRoute.findOne(Location.route_order);
+    const end = await TravelRoute.findOne(Location.route_order + 1);
 
-    if (!routeTitle && !endLocation) {
-        return res.status(404).json({ message: 'routeTitle에 있는 endLocation 찾을 수 없습니다.' });
+    if (!end) {
+        return res.status(404).json({ message: '도착 장소가 없습니다.' });
     }
 
     // 길찾기 URL 생성
-    const search_url = generateNaverSearchUrl(startLocation.place_name, endLocation.place_name);
+    const search_url = generateNaverSearchUrl(start.place_name, end.place_name);
 
     // Route 테이블에 추가
-    travelRoutes.push({
+    Route.push({
         travel_id,
-        start_location: startLocation.place_name,
-        end_location: endLocation.place_name,
+        route_title,
+        start_location: start.place_name,
+        end_location: end.place_name,
         search_url
     });
 
     res.status(201).json({
-      message: 'Route 테이블이 성공적으로 생성되었습니다.',
+      message: 'Route 테이블이 성공적으로 추가되었습니다.',
       route: newRoute
     });
   } catch (error) {
-    console.error('Route 생성 오류:', error);
-    res.status(500).json({ error: 'Route 생성 중 오류가 발생했습니다.' });
+    console.error('Route url 추가 오류:', error);
+    res.status(500).json({ error: 'Route url 추가 중 오류가 발생했습니다.' });
   }
 });
 
 // 길찾기 URL 조회 API
 router.get('/:travel_id/routes/:route_id', async (req, res) => {
-    const { travel_id, route_id } = req.body;
+    const { start_location, end_location } = req.body;
   
     try {
       // Route 테이블에서 start_location과 end_location이 일치하는 데이터 조회
       const route = await Route.findOne({
         where: {
-            travel_id,
-            start_location,
-            end_location
+          start_location,
+          end_location
         }
       });
   
@@ -78,12 +82,11 @@ router.get('/:travel_id/routes/:route_id', async (req, res) => {
       // 일치하는 경로 데이터 반환
       res.status(200).json({
         message: 'url을 성공적으로 조회하였습니다.',
-        route_id: route.route_id,
         search_url: route.search_url
       });
     } catch (error) {
-      console.error('Route 검색 오류:', error);
-      res.status(500).json({ error: 'Route 검색 중 오류가 발생했습니다.' });
+      console.error('url 조회 오류:', error);
+      res.status(500).json({ error: 'url 조회 중 오류가 발생했습니다.' });
     }
 });
   
