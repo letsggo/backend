@@ -39,7 +39,7 @@ router.get('/:travel_id/routes', async (req, res) => {
 
 
     res.status(201).json({
-      message: 'Route가 성공적으로 생성되었습니다.',
+      message: 'Route 테이블이 성공적으로 생성되었습니다.',
       route: newRoute
     });
   } catch (error) {
@@ -49,7 +49,7 @@ router.get('/:travel_id/routes', async (req, res) => {
 });
 
 // 길찾기 URL 조회 API
-router.post('/:travel_id/routes/:route_id', async (req, res) => {
+router.get('/:travel_id/routes/:route_id', async (req, res) => {
     const { start_location, end_location } = req.body;
   
     try {
@@ -67,6 +67,7 @@ router.post('/:travel_id/routes/:route_id', async (req, res) => {
   
       // 일치하는 경로 데이터 반환
       res.status(200).json({
+        message: 'url을 성공적으로 조회하였습니다.',
         route_id: route.route_id,
         search_url: route.search_url
       });

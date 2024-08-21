@@ -15,7 +15,6 @@ import CandidateRoutes from './src/routes/CreateCan.js';
 import googleAuthRoutes from './src/routes/googleAuth.js';
 import locationRoutes from './src/routes/locationRoutes.js';
 import travelPlanRoutes from './src/routes/travelPlans.js';
-import trRoutes from './src/routes/trRoutes.js';
 import makeRoomRoutes from './src/routes/makeRoomRoutes.js';
 import accommodationRoutes from './src/routes/accommodationRoutes.js';
 import inviteRoutes from './src/routes/inviteRoutes.js';
