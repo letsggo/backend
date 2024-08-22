@@ -4,63 +4,54 @@ import TravelPlan from './travelPlan.js';
 import TravelRoute from './travelRoute.js';
 
 const Route = sequelize.define('Route', {
+  way_id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
   travel_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: TravelPlan,
+      model: TravelPlan, // 외래키: TravelPlan의 travel_id
       key: 'travel_id'
     },
     onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
   },
   route_title: {
     type: DataTypes.STRING,
     allowNull: false,
     references: {
-      model: TravelRoute,
+      model: TravelRoute, // 외래키: TravelRoute의 route_title
       key: 'route_title'
     },
     onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
   },
   start_location: {
     type: DataTypes.STRING,
     allowNull: false,
-    references: {
-      model: TravelRoute,
-      key: 'place_name'
-    },
-    onDelete: 'CASCADE',
   },
   end_location: {
     type: DataTypes.STRING,
-    allowNull: true,
-    references: {
-      model: TravelRoute,
-      key: 'place_name'
-    },
-    onDelete: 'CASCADE',
+    allowNull: true, // 목적지 정보는 없을 수도 있음
   },
   search_url: {
     type: DataTypes.TEXT,
-    allowNull: true
+    allowNull: true // 길찾기 URL을 저장하는 필드
   }
 }, {
   tableName: 'Route',
   timestamps: false,
-  underscored: true,
+  underscored: true
 });
 
-// 모델 간의 관계를 설정합니다.
+// 모델 간의 관계 설정
 TravelPlan.hasMany(Route, { foreignKey: 'travel_id' });
 Route.belongsTo(TravelPlan, { foreignKey: 'travel_id' });
 
 TravelRoute.hasMany(Route, { foreignKey: 'route_title', sourceKey: 'route_title' });
 Route.belongsTo(TravelRoute, { foreignKey: 'route_title', targetKey: 'route_title' });
-
-TravelRoute.hasMany(Route, { foreignKey: 'start_location', sourceKey: 'place_name' });
-Route.belongsTo(TravelRoute, { foreignKey: 'start_location', targetKey: 'place_name' });
-
-TravelRoute.hasMany(Route, { foreignKey: 'end_location', sourceKey: 'place_name' });
-Route.belongsTo(TravelRoute, { foreignKey: 'end_location', targetKey: 'place_name' });
 
 export default Route;

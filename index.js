@@ -88,6 +88,7 @@ io.on('connection', (socket) => {
     });
 });
 
+// 데이터베이스 연결 확인
 sequelize.authenticate()
   .then(() => {
     console.log('데이터베이스에 연결되었습니다.');
@@ -96,12 +97,13 @@ sequelize.authenticate()
     console.error('데이터베이스 연결 오류:', err);
   });
 
-sequelize.sync({ alter: true })
+// 모든 모델을 동기화하는 코드 (테이블 생성)
+sequelize.sync({ alter: true }) // alter 옵션을 사용하여 테이블 구조 업데이트
   .then(() => {
-    console.log('모든 모델이 동기화되었습니다.');
+    console.log('모든 모델이 성공적으로 동기화되었습니다.');
   })
   .catch(err => {
-    console.error('모델 동기화 오류:', err);
+    console.error('모델 동기화 중 오류가 발생했습니다:', err);
   });
 
 app.use(morgan('dev'));

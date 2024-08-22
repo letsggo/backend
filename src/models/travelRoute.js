@@ -36,7 +36,8 @@ const TravelRoute = sequelize.define('TravelRoute', {
   },
   route_title: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   route_order: {
     type: DataTypes.INTEGER,
