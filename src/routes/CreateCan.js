@@ -8,7 +8,7 @@ const router = express.Router();
 
 // 새로운 후보지를 생성하는 API
 router.post('/candidates/new', async (req, res) => {
-  const { travel_id, location_id, favorit_id, can_name } = req.body;
+  const { travel_id, location_id, favorit_id, can_name, user_id } = req.body;
 
   try {
     let location, favorite;
@@ -42,12 +42,11 @@ router.post('/candidates/new', async (req, res) => {
       can_name: candidateName,
       location_id: location ? location.location_id : null,
       travel_id: travel_id,
-      user_id: location ? location.user_id : favorite.user_id,
+      user_id: user_id || (location ? location.user_id : favorite.user_id),
       favorit_id: favorite ? favorite.favorit_id : null
-  });
-  
-  console.log('Created candidate:', candidate);
-  
+    });
+
+    console.log('Created candidate:', candidate);
 
     res.status(201).json({ message: 'Candidate created successfully', candidate });
   } catch (error) {
@@ -55,6 +54,7 @@ router.post('/candidates/new', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while creating the candidate' });
   }
 });
+
 
 router.get('/candidates/by-travel', async (req, res) => {
   const { travel_id } = req.query;
