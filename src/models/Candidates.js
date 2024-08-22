@@ -1,8 +1,9 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../../database.js';
-import MPLM from './MyPlaceListMapping.js';
-import Location from './location.js';
-
+import Location from './Location.js';         // Location 모델을 불러옵니다.
+import TravelPlan from './travelPlan.js';     // TravelPlan 모델을 불러옵니다.
+import User from './user.js';                 // User 모델을 불러옵니다.
+import FavoriteList from './FavoriteList.js';
 
 const Candidate = sequelize.define('Candidate', {
   can_id: {
@@ -17,36 +18,37 @@ const Candidate = sequelize.define('Candidate', {
   location_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: Location,
+      model: Location,  // Location 모델을 참조합니다.
       key: 'location_id'
     }
   },
   travel_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: TravelPlan,
+      model: TravelPlan,  // TravelPlan 모델을 참조합니다.
       key: 'travel_id'
     }
   },
   user_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: User,
+      model: User,  // User 모델을 참조합니다.
       key: 'user_id'
     }
   },
-  list_id: {
+  favorit_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: List,
-      key: 'id'
+      model: FavoriteList, 
+      key: 'favorit_id'
     }
   }
+}, {
+  tableName: 'candidates',
+  timestamps: false
 });
 
-Candidate.belongsTo(MPLM, { foreignKey: 'list_id' });
-Candidate.belongsTo(MPLM, { foreignKey: 'user_id' });
-Candidate.belongsTo(Location, { foreignKey: 'travel_id' });
-Candidate.belongsTo(Location, { foreignKey: 'user_id' });
-
+// 모델 간의 관계 설정
+Candidate.belongsTo(Location, { foreignKey: 'location_id' });
+Candidate.belongsTo(FavoriteList, { foreignKey: 'favorit_id' });
 export default Candidate;
