@@ -89,9 +89,12 @@ router.get('/candidates', async (req, res) => {
       return res.status(400).json({ error: 'can_name and travel_id are required' });
     }
 
+    // can_name 디코딩
+    const decodedCanName = decodeURIComponent(can_name);
+
     // can_name과 travel_id에 해당하는 후보지 리스트 조회
     const candidates = await Candidate.findAll({
-      where: { can_name, travel_id },
+      where: { can_name: decodedCanName, travel_id },
       include: [
         {
           model: Location,
@@ -114,6 +117,5 @@ router.get('/candidates', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching the candidates' });
   }
 });
-
 
 export default router;
