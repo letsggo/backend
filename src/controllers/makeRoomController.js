@@ -120,7 +120,7 @@ class MakeRoomController {
       try {
         const myRooms = await MakeRoom.findAll({
           where: { user_id: req.user.user_id },
-          attributes: ['title', 'region', 'start_date', 'end_date', 'travel_image'] 
+          attributes: ['title', 'region', 'start_date', 'end_date', 'travel_image', 'travel_id'] 
         });
         res.status(200).json(myRooms);
       } catch (error) {
